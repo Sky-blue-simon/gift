@@ -1,0 +1,11 @@
+lecture\AbstractEvent$1.class
+lecture\AbstractEvent.class
+lecture\GiftRegistered.class
+lecture\config\kafka\KafkaProcessor.class
+lecture\Gift.class
+lecture\GiftCanceled.class
+lecture\PointCanceled.class
+lecture\GiftApplication.class
+lecture\GiftRepository.class
+lecture\PolicyHandler.class
+lecture\GiftController.class
