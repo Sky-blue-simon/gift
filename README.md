@@ -348,6 +348,15 @@ http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.am
 
 
 
+## Gateway
+
+gateway 서비스를 통하여 동일 진입점으로 진입하여 각각의 마이크로 서비스를 접근할 수 있다.
+
+![image](https://user-images.githubusercontent.com/80744224/121401305-8691a700-c993-11eb-8826-ce475814c024.png)
+
+외부에서 접근을 위하여 Gateway의 Service는 LoadBalancer Type으로 생성
+
+![image](https://user-images.githubusercontent.com/80744224/121401439-b0e36480-c993-11eb-8cc4-d4fbf7da3090.png)
 
 
 
