@@ -355,25 +355,25 @@ http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.am
 ![image](https://user-images.githubusercontent.com/80744224/121320144-d8144480-c947-11eb-8f3a-685641c1b5cb.png)
 
 
-# 기프트 (gift) 서비스를 잠시 내려놓음
+- 기프트 (gift) 서비스를 잠시 내려놓음
 
 cd ./gift/kubernetes
 
 kubectl delete -f deployment.yml
 
-# 수강 신청 후, 포인트(point) -> 기프트(gift) 갈 때 Fail
+- 수강 신청 후, 포인트(point) -> 기프트(gift) 갈 때 Fail
 
 ![image](https://user-images.githubusercontent.com/80744224/121329918-95a33580-c950-11eb-8f35-a5bae06645f8.png)
 
 ![image](https://user-images.githubusercontent.com/80744224/121330532-1104e700-c951-11eb-8f4a-4cef84da160c.png)
 
 
-# 결제서비스 재기동
+- 기프트(gift) 서비스 재기동
 
 ![image](https://user-images.githubusercontent.com/80744224/121323931-32fb6b00-c94b-11eb-8b6c-f92f86713566.png)
 
 
-# 수강 신청 후, 포인트와 기프트 정상 조회
+- 수강 신청 후, 포인트와 기프트 정상 조회
 
 http GET http://a6e770600b6db4906b16f6cffd71f5b6-1894361895.ap-southeast-2.elb.amazonaws.com:8080/points
 
@@ -387,133 +387,26 @@ http GET http://a6e770600b6db4906b16f6cffd71f5b6-1894361895.ap-southeast-2.elb.a
 
 ## 비동기식 호출 / 시간적 디커플링 / 장애격리 / 최종 (Eventual) 일관성 테스트
 
-
-결제가 이루어진 후에 배송시스템으로 이를 알려주는 행위는 동기식이 아니라 비 동기식으로 처리하여 배송 시스템의 처리를 위하여 결제주문이 블로킹 되지 않아도록 처리한다.
- 
-- 이를 위하여 결제이력에 기록을 남긴 후에 곧바로 결제승인이 되었다는 도메인 이벤트를 카프카로 송출한다(Publish)
- 
-```
-package lecture;
-
-@Entity
-@Table(name = "Payment_table")
-public class Payment {
-
-...
-    @PostPersist
-    public void onPostPersist() {
-        PaymentApproved paymentApproved = new PaymentApproved();
-        BeanUtils.copyProperties(this, paymentApproved);
-        paymentApproved.publishAfterCommit();
-    }
-```
-- 배송 서비스에서는 결제승인 이벤트에 대해서 이를 수신하여 자신의 정책을 처리하도록 PolicyHandler 를 구현한다:
-
-```
-package lecture;
-
-...
-
-@Service
-public class PolicyHandler {
-
-    @Autowired
-    DeliveryRepository deliveryRepository;
-
-    @Autowired
-    CourseRepository courseRepository;
-
-    @StreamListener(KafkaProcessor.INPUT)
-    public void wheneverPaymentApproved_DeliveryTextbook(@Payload PaymentApproved paymentApproved) {
-
-        if (paymentApproved.isMe()) {
-
-            Delivery delivery = new Delivery();
-            delivery.setClassId(paymentApproved.getClassId());
-            delivery.setCourseId(paymentApproved.getCourseId());
-            delivery.setStudent(paymentApproved.getStudent());
-            delivery.setPaymentId(paymentApproved.getId());
-            delivery.setTextBook(paymentApproved.getTextBook());
-            delivery.setStatus("DELIVERY_START");
-
-            Optional<Course> opt = courseRepository.findById(paymentApproved.getClassId());
-
-            Course course;
-            if (opt.isPresent()) {
-                course = opt.get();
-                delivery.setTextBook(course.getTextBook());
-            }
-            deliveryRepository.save(delivery);
-        }
-    }
-```
-실제 구현을 하자면, 학생은 결제완료와 동시에 책 배송 및 수강신청이 완료 되었다는 SMS를 받고, 이후 수강/결제/배송 상태 변경은 Mypage Aggregate 내에서 처리
-  
-```
-    @Autowired
-
-    @StreamListener(KafkaProcessor.INPUT)
-    public void whenPaymentApproved_then_CREATE_1(@Payload PaymentApproved paymentApproved) {
-        try {
-            if (paymentApproved.isMe()) {
-                InquiryMypage inquiryMypage = new InquiryMypage();
-                inquiryMypage.setClassId(paymentApproved.getClassId());
-                inquiryMypage.setPaymentId(paymentApproved.getId());
-                inquiryMypage.setCourseId(paymentApproved.getCourseId());
-                inquiryMypage.setFee(paymentApproved.getFee());
-                inquiryMypage.setStudent(paymentApproved.getStudent());
-                inquiryMypage.setPaymentStatus(paymentApproved.getStatus());
-                inquiryMypage.setTextBook(paymentApproved.getTextBook());
-                inquiryMypage.setStatus("CLASS_START");
-				
-                // view 레파지토리에 save
-                inquiryMypageRepository.save(inquiryMypage);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-	
-	@StreamListener(KafkaProcessor.INPUT)
-    public void whenTextbookDeliveried_then_UPDATE_2(@Payload TextbookDeliveried textbookDeliveried) {
-        try {
-            if (textbookDeliveried.isMe()) {
-                List<InquiryMypage> inquiryMypageList = inquiryMypageRepository
-                        .findByPaymentId(textbookDeliveried.getPaymentId());
-                for (InquiryMypage inquiryMypage : inquiryMypageList) {
-                    inquiryMypage.setDeliveryStatus(textbookDeliveried.getStatus());
-
-                    // view 레파지 토리에 save
-                    inquiryMypageRepository.save(inquiryMypage);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-```
-
 배송 시스템은 수강신청/결제와 완전히 분리되어있으며, 이벤트 수신에 따라 처리되기 때문에, 배송시스템이 유지보수로 인해 잠시 내려간 상태라도 수강신청을 받는데 문제가 없다:
 
-```
-# 배송 서비스 (course) 를 잠시 내려놓음 
+- 배송 서비스 (course) 를 잠시 내려놓음 
 cd ./course/kubernetes
 kubectl delete -f deployment.yml
 
-# 수강 신청
+- 수강 신청
 http POST http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/classes courseId=1 fee=10000 student=KimSoonHee textBook=eng_book #Success
 http POST http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/classes courseId=1 fee=12000 student=JohnDoe textBook=kor_book #Success
 
-# 수강 신청 상태 확인
+- 수강 신청 상태 확인
 http GET http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/classes   # 수강 신청 완료 
 http GET http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/inquiryMypages  # 배송 상태 "deliveryStatus": null
 
-# 배송 서비스 (course) 기동
+- 배송 서비스 (course) 기동
 kubectl apply -f deployment.yml
 
-# 배송 상태 확인
+- 배송 상태 확인
 http GET http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/inquiryMypages  # 배송 상태 "deliveryStatus": "DELIVERY_START"
-```
+
 
 
 # 운영
@@ -557,8 +450,6 @@ kubectl expose deploy point --type=ClusterIP --port=8080
 
 
 
-
-
 ## 동기식 호출 / 서킷 브레이킹 / 장애격리
 
 * 서킷 브레이킹 프레임워크의 선택: Spring FeignClient + Hystrix 옵션을 사용하여 구현함
@@ -578,104 +469,20 @@ hystrix:
       execution.isolation.thread.timeoutInMilliseconds: 1000
 ```
 
-* 부하테스터 siege 툴을 통한 서킷 브레이커 동작 확인:
-- 동시사용자 50명
-- 30초 동안 실시
 
-```
-$ siege -c50 -t30S -r10 -v --content-type "application/json" 'http://gateway:8080/classes POST {"courseId": 1, "fee": 10000, "student": "gil-dong", "textBook": "eng_book"}'
-
-defaulting to time-based testing: 30 seconds
-** SIEGE 4.0.4
-** Preparing 10 concurrent users for battle.
-The server is now under siege...
-
-HTTP/1.1 201     0.68 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.69 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.85 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.80 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.90 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.70 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.20 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.79 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.80 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.71 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.71 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.81 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.10 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.69 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.09 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.80 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     1.38 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.19 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.20 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.80 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.80 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.70 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.70 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.90 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.90 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.71 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.70 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.77 secs:     250 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 201     0.72 secs:     250 bytes ==> POST http://gateway:8080/classes
-
-* 요청이 과도하여 CB를 동작함 요청을 차단
-
-HTTP/1.1 500     1.31 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     1.51 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     1.42 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     1.52 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     1.51 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     1.71 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     1.99 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     2.60 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     1.70 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     1.70 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     1.72 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     1.91 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     1.68 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     2.10 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     2.80 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     1.82 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     2.08 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     0.38 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     1.60 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     1.90 secs:     221 bytes ==> POST http://gateway:8080/classes
-HTTP/1.1 500     0.49 secs:     221 bytes ==> POST http://gateway:8080/classes
-
-* 끝까지 500 에러 발생
-
-
-Lifting the server siege...
-Transactions:                    408 hits
-Availability:                  29.04 %
-Elapsed time:                  29.92 secs
-Data transferred:               0.31 MB
-Response time:                  3.57 secs
-Transaction rate:              13.64 trans/sec
-Throughput:                     0.01 MB/sec
-Concurrency:                   48.67
-Successful transactions:         408
-Failed transactions:             997
-Longest transaction:            4.19
-Shortest transaction:           0.09
-
-```
-- 운영시스템은 죽지 않고 지속적으로 CB 에 의하여 적절히 회로가 열림과 닫힘이 벌어지면서 자원을 보호하고 있음을 보여줌. 하지만, 29% 가 성공하였고, 71%가 실패했다는 것은 고객 사용성에 있어 좋지 않기 때문에 동적 Scale out (replica의 자동적 추가,HPA) 을 통하여 시스템을 확장 해주는 후속처리가 필요.
 
 ## 오토스케일 아웃
-앞서 CB 는 시스템을 안정되게 운영할 수 있게 해줬지만 사용자의 요청을 100% 받아들여주지 못했기 때문에 이에 대한 보완책으로 자동화된 확장 기능을 적용하고자 한다. 
 
+* replica 를 동적으로 늘려주도록 HPA 를 설정한다
 
-- 수강신청 및 결제서비스에 대한 replica 를 동적으로 늘려주도록 HPA 를 설정한다. 설정은 CPU 사용량이 30프로를 넘어서면 replica 를 10개까지 늘려준다
-```
 kubectl autoscale deploy gift --min=1 --max=10 --cpu-percent=5
+
 kubectl autoscale deploy course --min=1 --max=10 --cpu-percent=5
+
 kubectl autoscale deploy class --min=1 --max=10 --cpu-percent=1
-```
-- CB 에서 했던 방식대로 워크로드를 30초 동안 걸어준다. 
-```
+
+* 부하테스터 siege 툴 사용
+
 siege -c150 -t30S -v --content-type "application/json" 'http://a2407157de33e4281bce4111697ad1ff-1059344160.ap-southeast-2.elb.amazonaws.com:8080/gifts POST {"classId":"100", "fee":"20000", "student":"young"}'
 
 siege -c255 -t300S -v --content-type "application/json" 'http://a2407157de33e4281bce4111697ad1ff-1059344160.ap-southeast-2.elb.amazonaws.com:8080/courses POST {"name":"english", "teacher":"hong", "fee":"10000", "textBook":"eng_book"}'
