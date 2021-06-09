@@ -128,6 +128,7 @@
 
 
 ### 모델링 완료
+![모델링 완료](https://user-images.githubusercontent.com/80744224/121277726-302d5580-c90c-11eb-9089-445623fbb708.png)
 
 
 ### 비기능 요구사항에 대한 검증
