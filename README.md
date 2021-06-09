@@ -333,6 +333,11 @@ http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.am
 ![image](https://user-images.githubusercontent.com/80744224/121348907-e2dcd280-c963-11eb-8792-7093344b86cc.png)
 
 
+- My Page
+
+![image](https://user-images.githubusercontent.com/80744224/121349224-394a1100-c964-11eb-8adc-515d9e4576d9.png)
+
+
 
 
 
