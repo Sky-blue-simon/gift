@@ -322,14 +322,16 @@ http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.am
 ![포인트 등록](https://user-images.githubusercontent.com/80744224/121348585-7d88e180-c963-11eb-96bf-86d4d1f8f116.png)
 
 - 크롬에서 포인트 등록 확인
-![포인트 등록 확인](https://user-images.githubusercontent.com/80744224/121309678-70f19280-c93d-11eb-8cea-37f01e05c579.png)
+![image](https://user-images.githubusercontent.com/80744224/121348828-cb054e80-c963-11eb-920e-f7e8e1ab82ae.png)
+
 
 - 기프트 등록 확인
 ![기프트 등록](https://user-images.githubusercontent.com/80744224/121348678-998c8300-c963-11eb-9f44-0a61e12171a1.png)
 
 
 - 크롬에서 기프트 등록 확인
-![기프트 등록 확인](https://user-images.githubusercontent.com/80744224/121309886-b01fe380-c93d-11eb-8162-57469f65d65c.png)
+![image](https://user-images.githubusercontent.com/80744224/121348907-e2dcd280-c963-11eb-8792-7093344b86cc.png)
+
 
 
 
