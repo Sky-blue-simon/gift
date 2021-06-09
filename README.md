@@ -158,49 +158,57 @@ cd pay
 mvn spring-boot:run  
 
 cd alert
-python alert_consumer.py
-python alert_web.py 
+mvn spring-boot:run
 
 cd gateway
 mvn spring-boot:run
+
+cd point
+mvn spirng-boot:run
+
+cd gift
+mvn spring-boot:run
 ```
 
-- 아래 부터는 AWS 클라우드의 EKS 서비스 내에 서비스를 모두 배포 후 설명을 진행한다.
+- AWS 클라우드의 EKS 서비스 내에 서비스를 모두 배포함.
 ```
-root@labs-1409824742:/home/project/team/lecture/course/kubernetes# kubectl get all
+root@labs--1263645818:/home/project# kubectl get all
 NAME                           READY   STATUS    RESTARTS   AGE
-pod/alert-7cbc74668-clsdv      2/2     Running   0          3h13m
-pod/class-5864b4f7cc-rzrz9     1/1     Running   0          163m
-pod/course-64978c8dd8-nmwxp    1/1     Running   0          112m
-pod/gateway-65d7888594-mqpls   1/1     Running   0          3h11m
-pod/pay-575875fc9-kk56d        1/1     Running   2          162m
-pod/siege                      1/1     Running   0          8h
+pod/alert-68fd9f6849-cnj62     1/1     Running   0          78m
+pod/class-76f4ffccc5-9nq4d     1/1     Running   0          77m
+pod/course-6c84b865bd-2sjsl    1/1     Running   0          55m
+pod/gateway-7575d84bdf-6ddcx   1/1     Running   0          73m
+pod/gift-864958499f-kzjjs      1/1     Running   0          79m
+pod/pay-7658574c6f-vp7x9       1/1     Running   0          74m
+pod/point-5fb456d68f-2jc5z     1/1     Running   0          18m
 
-NAME                 TYPE           CLUSTER-IP       EXTERNAL-IP                                                                  PORT(S)          AGE
-service/alert        ClusterIP      10.100.108.57    <none>                                                                       8084/TCP         6h43m
-service/class        ClusterIP      10.100.233.190   <none>                                                                       8080/TCP         7h12m
-service/course       ClusterIP      10.100.121.125   <none>                                                                       8080/TCP         3h30m
-service/gateway      LoadBalancer   10.100.138.145   aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com   8080:31881/TCP   8h
-service/kubernetes   ClusterIP      10.100.0.1       <none>                                                                       443/TCP          9h
-service/pay          ClusterIP      10.100.76.173    <none>                                                                       8080/TCP         7h4m
+NAME                 TYPE           CLUSTER-IP       EXTERNAL-IP                                                                    PORT(S)          AGE
+service/alert        ClusterIP      10.100.34.122    <none>                                                                         8080/TCP         78m
+service/class        ClusterIP      10.100.242.45    <none>                                                                         8080/TCP         77m
+service/course       ClusterIP      10.100.82.239    <none>                                                                         8080/TCP         75m
+service/gateway      LoadBalancer   10.100.138.251   a6e770600b6db4906b16f6cffd71f5b6-1894361895.ap-southeast-2.elb.amazonaws.com   8080:30947/TCP   73m
+service/gift         ClusterIP      10.100.115.182   <none>                                                                         8080/TCP         79m
+service/kubernetes   ClusterIP      10.100.0.1       <none>                                                                         443/TCP          87m
+service/pay          ClusterIP      10.100.251.57    <none>                                                                         8080/TCP         74m
+service/point        ClusterIP      10.100.86.12     <none>                                                                         8080/TCP         18m
 
 NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/alert     1/1     1            1           3h13m
-deployment.apps/class     1/1     1            1           163m
-deployment.apps/course    1/1     1            1           3h12m
-deployment.apps/gateway   1/1     1            1           3h11m
-deployment.apps/pay       1/1     1            1           162m
+deployment.apps/alert     1/1     1            1           78m
+deployment.apps/class     1/1     1            1           77m
+deployment.apps/course    1/1     1            1           76m
+deployment.apps/gateway   1/1     1            1           73m
+deployment.apps/gift      1/1     1            1           79m
+deployment.apps/pay       1/1     1            1           75m
+deployment.apps/point     1/1     1            1           18m
 
 NAME                                 DESIRED   CURRENT   READY   AGE
-replicaset.apps/alert-7cbc74668      1         1         1       3h13m
-replicaset.apps/class-5864b4f7cc     1         1         1       163m
-replicaset.apps/course-64978c8dd8    1         1         1       3h12m
-replicaset.apps/gateway-65d7888594   1         1         1       3h11m
-replicaset.apps/pay-575875fc9        1         1         1       162m
-
-NAME                                        REFERENCE          TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
-horizontalpodautoscaler.autoscaling/class   Deployment/class   0%/30%    1         10        1          155m
-horizontalpodautoscaler.autoscaling/pay     Deployment/pay     0%/30%    1         10        1          155m
+replicaset.apps/alert-68fd9f6849     1         1         1       78m
+replicaset.apps/class-76f4ffccc5     1         1         1       77m
+replicaset.apps/course-6c84b865bd    1         1         1       76m
+replicaset.apps/gateway-7575d84bdf   1         1         1       73m
+replicaset.apps/gift-864958499f      1         1         1       79m
+replicaset.apps/pay-7658574c6f       1         1         1       75m
+replicaset.apps/point-5fb456d68f     1         1         1       18m
 ```
 
 ## DDD 의 적용
