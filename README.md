@@ -355,17 +355,28 @@ http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.am
 
 ```
 
+- 강좌 등록 확인
 ![강좌 등록](https://user-images.githubusercontent.com/80744224/121299296-287fa800-c930-11eb-984d-5a538905a839.png)
 
 ![강좌 등록 확인](https://user-images.githubusercontent.com/80744224/121299250-156cd800-c930-11eb-8b9d-12a1721ed911.png)
 
+- 수강 신청
 ![수강 신청](https://user-images.githubusercontent.com/80744224/121299431-6250ae80-c930-11eb-96fe-908c401cce3d.png)
 
 ![수강 신청 확인](https://user-images.githubusercontent.com/80744224/121299528-8613f480-c930-11eb-96d2-57fe15b6650b.png)
 
+- 포인트 등록 확인
 ![포인트 등록 확인](https://user-images.githubusercontent.com/80744224/121309393-16f0cd00-c93d-11eb-9468-9a0b5d1b6b6d.png)
 
+- 크롬에서 포인트 등록 확인
+![포인트 등록 확인](https://user-images.githubusercontent.com/80744224/121309678-70f19280-c93d-11eb-8cea-37f01e05c579.png)
+
+- 기프트 등록 확인
 ![기프트 등록 확인](https://user-images.githubusercontent.com/80744224/121309494-3687f580-c93d-11eb-8dff-2bc4ec14ce51.png)
+
+- 크롬에서 기프트 등록 확인
+![기프트 등록 확인](https://user-images.githubusercontent.com/80744224/121309886-b01fe380-c93d-11eb-8162-57469f65d65c.png)
+
 
 
 
