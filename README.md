@@ -356,7 +356,9 @@ http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.am
 
 
 # 기프트 (gift) 서비스를 잠시 내려놓음
+
 cd ./gift/kubernetes
+
 kubectl delete -f deployment.yml
 
 # 수강 신청 후, 포인트(point) -> 기프트(gift) 갈 때 Fail
@@ -367,11 +369,14 @@ kubectl delete -f deployment.yml
 
 
 # 결제서비스 재기동
+
 ![image](https://user-images.githubusercontent.com/80744224/121323931-32fb6b00-c94b-11eb-8b6c-f92f86713566.png)
 
 
 # 수강 신청 후, 포인트와 기프트 정상 조회
+
 http GET http://a6e770600b6db4906b16f6cffd71f5b6-1894361895.ap-southeast-2.elb.amazonaws.com:8080/points
+
 http GET http://a6e770600b6db4906b16f6cffd71f5b6-1894361895.ap-southeast-2.elb.amazonaws.com:8080/gifts
 
 ![image](https://user-images.githubusercontent.com/80744224/121324229-7a81f700-c94b-11eb-94d4-9ededce6606a.png)
