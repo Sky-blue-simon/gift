@@ -536,6 +536,9 @@ kubectl delete -f deployment.yml
 http POST http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/classes courseId=1 fee=10000 student=KimSoonHee textBook=eng_book #Fail
 http POST http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/classes courseId=1 fee=12000 student=JohnDoe textBook=kor_book #Fail
 
+![image](https://user-images.githubusercontent.com/80744224/121321228-e020b400-c948-11eb-849a-e33031e2d99f.png)
+
+
 # 결제서비스 재기동
 kubectl apply -f deployment.yml
 
