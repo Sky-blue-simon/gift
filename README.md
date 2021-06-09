@@ -355,6 +355,11 @@ http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.am
 
 ```
 
+![강좌 등록](https://user-images.githubusercontent.com/80744224/121299296-287fa800-c930-11eb-984d-5a538905a839.png)
+
+![강좌 등록 확인](https://user-images.githubusercontent.com/80744224/121299250-156cd800-c930-11eb-8b9d-12a1721ed911.png)
+
+
 ## 폴리글랏 퍼시스턴스
 
 결제 서비스 (pay) 는 서비스 특성상 Money와 관련된 결제 서비스로 H2 DB 보다는 더욱 안정적인 mysql 을 사용하기로 하였다. 
