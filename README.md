@@ -392,43 +392,20 @@ http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.am
 
 ## 폴리글랏 퍼시스턴스
 
-결제 서비스 (pay) 는 서비스 특성상 Money와 관련된 결제 서비스로 H2 DB 보다는 더욱 안정적인 mysql 을 사용하기로 하였다. 
-Spring Cloud JPA를 사용하여 개발하였기 때문에 소스의 변경 부분은 전혀 없으며, 단지 데이터베이스 제품의 설정 (application.yml) 만으로 mysql 에 부착시켰다
+기프트 (pay) 서비스는 기존 h2 가 아닌 hsqldb로 구성하기 위해, maven dependancy를 추가.
 
 ```
-# application.yml
+# 기프트(gift) 서비스의 pom.xml
 
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql-1621689014.mysql.svc.cluster.local:3306/paydb?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
-    username: root
-    password: 2pAXUITEjo
-  jpa:
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    generate-ddl: true
-    show-sql: true
+    <dependency>
+        <groupId>org.hsqldb</groupId>
+        <artifactId>hsqldb</artifactId>
+        <version>2.5.1</version>
+        <scope>runtime</scope>
+    </dependency>
 
 ```
 
-- mysql 서비스 확인 (kubectl get all,pvc -n mysql)
-
-```
-NAME                                    READY   STATUS    RESTARTS   AGE
-pod/mysql-1621826572-7b6b9d8477-qsjmb   1/1     Running   0          3h44m
-
-NAME                       TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
-service/mysql-1621826572   ClusterIP   10.100.64.70   <none>        3306/TCP   8h
-
-NAME                               READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/mysql-1621826572   1/1     1            1           8h
-
-NAME                                          DESIRED   CURRENT   READY   AGE
-replicaset.apps/mysql-1621826572-7b6b9d8477   1         1         1       8h
-
-NAME                                     STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-persistentvolumeclaim/mysql-1621826572   Bound    pvc-d746469a-9f39-4177-9f5a-1aee384d6064   8Gi        RWO            gp2            8h
-```
 
 
 ## 동기식 호출 과 Fallback 처리
