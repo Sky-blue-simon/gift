@@ -334,7 +334,8 @@ http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.am
 
 
 - My Page
-![image](https://user-images.githubusercontent.com/80744224/121349224-394a1100-c964-11eb-8adc-515d9e4576d9.png)
+![image](https://user-images.githubusercontent.com/80744224/121400544-af656c80-c992-11eb-90e9-0f9ef1482abd.png)
+
 
 - 수강 취소
 ![image](https://user-images.githubusercontent.com/80744224/121349495-8a5a0500-c964-11eb-95cf-54dd66d2a79a.png)
