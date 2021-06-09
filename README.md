@@ -127,39 +127,8 @@
 ![부적격 이벤트](https://user-images.githubusercontent.com/80744224/121277157-f871de00-c90a-11eb-8b32-47ec1588cfa8.png)
 
 
-### 폴리시의 이동과 컨텍스트 매핑 (점선은 Pub/Sub, 실선은 Req/Resp)
+### 모델링 완료
 
-![1차본](https://user-images.githubusercontent.com/80744183/119314934-40102d00-bcb0-11eb-8ffa-e3807f05c5d7.png)
-
-### 완성된 1차 모형
-
-![1차본완성](https://user-images.githubusercontent.com/80744183/119314979-4bfbef00-bcb0-11eb-8e31-51cc5ef9d9fc.png)
-
-    - View Model 추가
-
-### 1차 완성본에 대한 기능적/비기능적 요구사항을 커버하는지 검증
-
-<img width="354" alt="1차본완성_1" src="https://user-images.githubusercontent.com/80744183/119315026-5918de00-bcb0-11eb-9cd4-048d7e9413b9.png">
-    
-    - 수강생이 강의를 신청한다 (ok)
-    - 수강생이 강의를 결제한다 (ok)
-    - 강의신청이 되면 주문 내역이 배송팀에게 전달된다 (ok)
-    - 배송팀에서 강의 교재 배송 출발한다 (ok)
-
-<img width="354" alt="1차본완성_2" src="https://user-images.githubusercontent.com/80744183/119315093-72218f00-bcb0-11eb-89da-74c039d0435a.png">
-    
-    - 수강생이 강의를 취소할 수 있다 (ok) 
-    - 강의가 취소되면 결제 취소된다 (ok) 
-    - 결제가 취소되면 배송이 취소된다 (ok) 
-    - 주문상태가 바뀔 때 마다 카톡으로 알림을 보낸다 (?)
-
-
-### 모델 수정
-
-![모델수정](https://user-images.githubusercontent.com/80744183/119315187-8cf40380-bcb0-11eb-88cf-26f55d8a8b70.png)
-    
-    - 수정된 모델은 모든 요구사항을 커버함.
-    - 배송 등록 event의 경우 한 event로 통함함.
 
 ### 비기능 요구사항에 대한 검증
 
