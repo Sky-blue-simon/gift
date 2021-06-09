@@ -686,7 +686,8 @@ siege -c255 -t300S -v --content-type "application/json" 'http://a2407157de33e428
 
 watch kubectl get pod,hpa
 
-![image](https://user-images.githubusercontent.com/80744224/121343356-8aa2d200-c95d-11eb-9ed9-d57c7ad26acd.png)
+![image](https://user-images.githubusercontent.com/80744224/121344497-cab68480-c95e-11eb-8637-c68dc8de5c7f.png)
+
 
 
 
