@@ -648,76 +648,34 @@ http GET http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.ama
 
 ## CI/CD 설정
 
-### clodubuild.yml 사용
- 
- - 각 구현체들은 각자의 source repository 에 구성되었고, 사용한 CI/CD 플랫폼은 GCP를 사용하였으며, pipeline build script 는 각 프로젝트 폴더 이하에 cloudbuild.yml 에 포함되었다.
-
-### codebuild 사용
-
-- 빌드 프로젝트 생성
-
-![image](https://user-images.githubusercontent.com/80744224/119322283-7356ba00-bcb8-11eb-806f-b0a8a2317783.png)
-
-
-- Github 계정 연결 후 Fork 한 리포지토리 연결
-
-![image](https://user-images.githubusercontent.com/80744224/119322218-6639cb00-bcb8-11eb-8d93-acbe471cdc68.png)
-
-
-- Webhook 을 설정하여 Github 에 코드가 푸쉬될 때마다 트리거 동작
-
-![image](https://user-images.githubusercontent.com/80744224/119322149-5621eb80-bcb8-11eb-94b8-7e2fd211d85a.png)
-
-
-- 빌드가 돌아갈 환경 설정
-
-![image](https://user-images.githubusercontent.com/80744224/119322908-17d8fc00-bcb9-11eb-9af1-158225ac4c6a.png)
-
-- AWS 계정 ID 
-
-![image](https://user-images.githubusercontent.com/80744224/119322675-d3e5f700-bcb8-11eb-8a74-a6532e8f5932.png)
-
-
-- 빌드 스펙
-
-![image](https://user-images.githubusercontent.com/80744224/119323010-33dc9d80-bcb9-11eb-93c6-33e0a26f73c9.png)
-
-
-- Codebuild 와 EKS 연결
-
--- KUBE_URL
-![image](https://user-images.githubusercontent.com/80744192/119440729-d51e2f00-bd5f-11eb-9b8d-1c5283fe300b.png)
-
-
--- KUBE_TOKEN
-![image](https://user-images.githubusercontent.com/80744192/119440815-fbdc6580-bd5f-11eb-85aa-8c50af946275.png)
-![image](https://user-images.githubusercontent.com/80744224/119324092-620ead00-bcba-11eb-895d-3abda8681720.png)
-
-
--- 배포 성공
-
-![image](https://user-images.githubusercontent.com/80744224/119431690-f9711000-bd4d-11eb-9c59-d43244d3f31a.png)
-
-
-
-
 ### docker images를 수작업 배포/기동
+
+CodeBuild를 사용하지 않고 docker images를 AWS를 통해 수작업으로 배포/기동하였음.
 
 - package & docker image build/push
 
 mvn package
 
-docker build -t 052937454741.dkr.ecr.ap-northeast-2.amazonaws.com/lecture-course:latest .
+docker build -t 879772956301.dkr.ecr.ap-southeast-2.amazonaws.com/user09-point:latest .
 
-docker push 052937454741.dkr.ecr.ap-northeast-2.amazonaws.com/lecture-course:latest
+docker push 879772956301.dkr.ecr.ap-southeast-2.amazonaws.com/user09-point:latest
 
 - docker 이미지로 Deployment 생성
 
-kubectl create deploy course --image=052937454741.dkr.ecr.ap-northeast-2.amazonaws.com/lecture-course:latest
+kubectl create deploy point --image=879772956301.dkr.ecr.ap-southeast-2.amazonaws.com/user09-point:latest
 
 - expose
 
-kubectl expose deploy course --type=ClusterIP --port=8080
+kubectl expose deploy point --type=ClusterIP --port=8080
+
+![image](https://user-images.githubusercontent.com/80744224/121287993-95d60d80-c91d-11eb-8a78-98ffd3fff77a.png)
+
+![image](https://user-images.githubusercontent.com/80744224/121288019-a38b9300-c91d-11eb-973d-5430fbf3e372.png)
+
+![image](https://user-images.githubusercontent.com/80744224/121288036-ad14fb00-c91d-11eb-9863-5f12a0a50929.png)
+
+![image](https://user-images.githubusercontent.com/80744224/121288049-b2724580-c91d-11eb-9e2c-2cd2693e0600.png)
+
 
 
 ## 동기식 호출 / 서킷 브레이킹 / 장애격리
