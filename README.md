@@ -496,7 +496,7 @@ hystrix:
 
 * replica 를 동적으로 늘려주도록 HPA 를 설정한다
 
-kubectl autoscale deploy gift --min=1 --max=10 --cpu-percent=5
+kubectl autoscale deploy gift --min=1 --max=10 --cpu-percent=15
 
 kubectl autoscale deploy course --min=1 --max=10 --cpu-percent=5
 
