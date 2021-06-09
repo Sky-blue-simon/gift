@@ -488,7 +488,7 @@ siege -c150 -t30S -v --content-type "application/json" 'http://a2407157de33e4281
 siege -c255 -t300S -v --content-type "application/json" 'http://a2407157de33e4281bce4111697ad1ff-1059344160.ap-southeast-2.elb.amazonaws.com:8080/courses POST {"name":"english", "teacher":"hong", "fee":"10000", "textBook":"eng_book"}'
 
 siege -c255 -t300S -v --content-type "application/json" 'http://a2407157de33e4281bce4111697ad1ff-1059344160.ap-southeast-2.elb.amazonaws.com:8080/classes POST {"courseId":"3", "fee":"10000", "student":"gil-dong", "textBook":"eng_book"}'
-```
+
 - 오토스케일이 어떻게 되고 있는지 모니터링을 걸어둔다:
 
 watch kubectl get pod,hpa
