@@ -304,40 +304,54 @@ public interface CourseRepository extends PagingAndSortingRepository<Course, Lon
 
 ```
 # 신규 강좌 등록
-http POST http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/courses name=korean teacher=hong-gil-dong fee=10000 textBook=kor_book
+http POST http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.amazonaws.com:8080/courses name=korean teacher=hong-gil-dong fee=10000 textBook=kor_book
 
 # 등록된 강좌 확인
-http GET http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/courses
+http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.amazonaws.com:8080/courses
 
 # 수강 신청
-http POST http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/classes courseId=1 fee=10000 student=john-doe textBook=kor_book
+http POST http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.amazonaws.com:8080/classes courseId=1 fee=10000 student=john-doe textBook=kor_book
 
 # 수강 등록 확인
-http GET http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/classes
+http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.amazonaws.com:8080/classes
 
 # 결제 성공 확인
-http GET http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/payments
+http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.amazonaws.com:8080/payments
 
 # 수강 교재 배송 시작 확인
-http GET http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/deliveries
+http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.amazonaws.com:8080/deliveries
+
+# 포인트 취득 확인
+http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.amazonaws.com:8080/points
+
+# 기프트 취득 확인
+http GET a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.amazonaws.com:8080/gifts
 
 # My page에서 수강신청여부/결제성공여부/배송상태 확인
-http GET http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/inquiryMypages
+http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.amazonaws.com:8080/inquiryMypages
+
 
 # 수강 취소
-http DELETE http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/classes/1
+http DELETE http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.amazonaws.com:8080/classes/1
 
 # 수강 삭제 확인
-http GET http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/classes
+http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.amazonaws.com:8080/classes
 
 # 결제 취소 확인 (상태값 "CANCEL" 확인)
-http GET http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/payments
+http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.amazonaws.com:8080/payments
 
 # 배송 취소 확인 (상태값 "DELIVERY_CANCEL" 확인)
-http GET http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/deliveries
+http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.amazonaws.com:8080/deliveries
+
+# 포인트 취소 확인
+http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.amazonaws.com:8080/points
+
+# 기프트 취소 확인
+http GET a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.amazonaws.com:8080/gifts
+
 
 # My page에서 수강신청여부/결제성공여부/배송상태 확인
-http GET http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/inquiryMypages
+http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.amazonaws.com:8080/inquiryMypages
 
 ```
 
