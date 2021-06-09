@@ -119,7 +119,8 @@
 
 
 ### 이벤트 도출
-![이벤트 도출](https://user-images.githubusercontent.com/80744224/121274366-4f74b480-c905-11eb-8cd4-0b047dd0baa6.png)
+![이벤트 도출](https://user-images.githubusercontent.com/80744224/121274764-299bdf80-c906-11eb-932b-2575e9ffbc59.png)
+
 
 
 ### 부적격 이벤트 탈락
