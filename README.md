@@ -670,55 +670,25 @@ Shortest transaction:           0.09
 
 - 수강신청 및 결제서비스에 대한 replica 를 동적으로 늘려주도록 HPA 를 설정한다. 설정은 CPU 사용량이 30프로를 넘어서면 replica 를 10개까지 늘려준다
 ```
-kubectl autoscale deploy class --min=1 --max=10 --cpu-percent=30
-kubectl autoscale deploy pay --min=1 --max=10 --cpu-percent=30
+kubectl autoscale deploy gift --min=1 --max=10 --cpu-percent=5
+kubectl autoscale deploy course --min=1 --max=10 --cpu-percent=5
+kubectl autoscale deploy class --min=1 --max=10 --cpu-percent=1
 ```
 - CB 에서 했던 방식대로 워크로드를 30초 동안 걸어준다. 
 ```
-siege -c50 -t30S -r10 -v --content-type "application/json" 'http://gateway:8080/classes POST {"courseId": 1, "fee": 10000, "student": "gil-dong", "textBook": "eng_book"}'
+siege -c150 -t30S -v --content-type "application/json" 'http://a2407157de33e4281bce4111697ad1ff-1059344160.ap-southeast-2.elb.amazonaws.com:8080/gifts POST {"classId":"100", "fee":"20000", "student":"young"}'
+
+siege -c255 -t300S -v --content-type "application/json" 'http://a2407157de33e4281bce4111697ad1ff-1059344160.ap-southeast-2.elb.amazonaws.com:8080/courses POST {"name":"english", "teacher":"hong", "fee":"10000", "textBook":"eng_book"}'
+
+siege -c255 -t300S -v --content-type "application/json" 'http://a2407157de33e4281bce4111697ad1ff-1059344160.ap-southeast-2.elb.amazonaws.com:8080/classes POST {"courseId":"3", "fee":"10000", "student":"gil-dong", "textBook":"eng_book"}'
 ```
 - 오토스케일이 어떻게 되고 있는지 모니터링을 걸어둔다:
-```
-watch kubectl get pod,hpa
-```
-- 어느정도 시간이 흐른 후 (약 30초) 스케일 아웃이 벌어지는 것을 확인할 수 있다:
-```
-NAME                                        REFERENCE          TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
-horizontalpodautoscaler.autoscaling/class   Deployment/class   69%/30%   1         10        5          6m25s
-horizontalpodautoscaler.autoscaling/pay     Deployment/pay     27%/30%   1         10        4          6m24s
 
-NAME                           READY   STATUS    RESTARTS   AGE
-pod/alert-7cbc74668-clsdv      2/2     Running   0          43m
-pod/class-5864b4f7cc-bm88m     0/1     Running   0          19s
-pod/class-5864b4f7cc-dbzvz     1/1     Running   0          3m37s
-pod/class-5864b4f7cc-fjscn     0/1     Running   0          34s
-pod/class-5864b4f7cc-jq2sq     0/1     Running   0          34s
-pod/class-5864b4f7cc-rzrz9     1/1     Running   0          13m
-pod/course-64978c8dd8-nwlxs    1/1     Running   0          42m
-pod/gateway-65d7888594-mqpls   1/1     Running   0          41m
-pod/pay-575875fc9-gtkss        1/1     Running   0          2m36s
-pod/pay-575875fc9-h28rg        1/1     Running   0          2m36s
-pod/pay-575875fc9-kk56d        1/1     Running   2          13m
-pod/pay-575875fc9-r2ll2        1/1     Running   0          2m36s
-pod/siege                      1/1     Running   0          5h41m
-:
-```
-- siege 의 로그를 보아도 전체적인 성공률이 높아진 것을 확인 할 수 있다. 
-```
-Lifting the server siege...
-Transactions:                   1916 hits
-Availability:                  97.21 %
-Elapsed time:                  29.15 secs
-Data transferred:               0.47 MB
-Response time:                  0.74 secs
-Transaction rate:              65.73 trans/sec
-Throughput:                     0.02 MB/sec
-Concurrency:                   48.70
-Successful transactions:        1916
-Failed transactions:              55
-Longest transaction:            8.44
-Shortest transaction:           0.00
-```
+watch kubectl get pod,hpa
+
+![image](https://user-images.githubusercontent.com/80744224/121343356-8aa2d200-c95d-11eb-9ed9-d57c7ad26acd.png)
+
+
 
 
 ## 무정지 재배포
