@@ -310,12 +310,10 @@ http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.am
 - 강좌 등록 확인
 ![강좌 등록](https://user-images.githubusercontent.com/80744224/121299296-287fa800-c930-11eb-984d-5a538905a839.png)
 
-![강좌 등록 확인](https://user-images.githubusercontent.com/80744224/121299250-156cd800-c930-11eb-8b9d-12a1721ed911.png)
 
 - 수강 신청
 ![수강 신청](https://user-images.githubusercontent.com/80744224/121299431-6250ae80-c930-11eb-96fe-908c401cce3d.png)
 
-![수강 신청 확인](https://user-images.githubusercontent.com/80744224/121299528-8613f480-c930-11eb-96d2-57fe15b6650b.png)
 
 - 포인트 등록 확인
 ![포인트 등록 확인](https://user-images.githubusercontent.com/80744224/121309393-16f0cd00-c93d-11eb-9468-9a0b5d1b6b6d.png)
@@ -328,8 +326,6 @@ http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.am
 
 - 크롬에서 기프트 등록 확인
 ![기프트 등록 확인](https://user-images.githubusercontent.com/80744224/121309886-b01fe380-c93d-11eb-8162-57469f65d65c.png)
-
-
 
 
 
@@ -350,62 +346,14 @@ http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.am
 
 ```
 
-
-
-## 동기식 호출 과 Fallback 처리
+## 동기식 호출
 
 수강신청(class) 한 후, 포인트(point) -> 기프트(gift) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리함.
 
 - 결제서비스를 호출하기 위하여 Stub과 (FeignClient) 를 이용하여 Service 대행 인터페이스 (Proxy) 를 구현 
 
-
 ![image](https://user-images.githubusercontent.com/80744224/121320144-d8144480-c947-11eb-8f3a-685641c1b5cb.png)
 
-
-- FallBack 처리
-```
-# (class) PaymentServiceFallback.java
-
-package lecture.external;
-
-import org.springframework.stereotype.Component;
-
-@Component
-public class PaymentServiceFallback implements PaymentService {
-    @Override
-    public boolean pay(Payment payment) {
-        //do nothing if you want to forgive it
-
-        System.out.println("Circuit breaker has been opened. Fallback returned instead.");
-        return false;
-    }
-}
-```
-
-- 주문을 받은 직후(@PostPersist) 결제를 요청하도록 처리
-```
-# Class.java (Entity)
-    @PostPersist
-    public void onPostPersist() throws Exception {
-        Payment payment = new Payment();
-        payment.setClassId(this.getId());
-        payment.setCourseId(this.getCourseId());
-        payment.setFee(this.getFee());
-        payment.setStudent(this.getStudent());
-        payment.setStatus("PAYMENT_COMPLETED");
-        payment.setTextBook(this.getTextBook());
-
-        if (ClassApplication.applicationContext.getBean(PaymentService.class).pay(payment)) {
-            ClassRegistered classRegistered = new ClassRegistered();
-            BeanUtils.copyProperties(this, classRegistered);
-            classRegistered.publishAfterCommit();
-        }else {
-            throw new RollbackException("Failed during payment");
-        }
-    }
-```
-
-- 동기식 호출에서는 호출 시간에 따른 타임 커플링이 발생하며, 결제 시스템이 장애가 나면 주문도 못받는다는 것을 확인:
 
 # 기프트 (gift) 서비스를 잠시 내려놓음
 cd ./gift/kubernetes
@@ -416,8 +364,6 @@ kubectl delete -f deployment.yml
 ![image](https://user-images.githubusercontent.com/80744224/121329918-95a33580-c950-11eb-8f35-a5bae06645f8.png)
 
 ![image](https://user-images.githubusercontent.com/80744224/121330532-1104e700-c951-11eb-8f4a-4cef84da160c.png)
-
-
 
 
 # 결제서비스 재기동
@@ -432,9 +378,6 @@ http GET http://a6e770600b6db4906b16f6cffd71f5b6-1894361895.ap-southeast-2.elb.a
 
 ![image](https://user-images.githubusercontent.com/80744224/121323960-3abb0f80-c94b-11eb-8ee7-a5cc13bac923.png)
 
-```
-
-- 또한 과도한 요청시에 서비스 장애가 도미노 처럼 벌어질 수 있다. 
 
 
 ## 비동기식 호출 / 시간적 디커플링 / 장애격리 / 최종 (Eventual) 일관성 테스트
