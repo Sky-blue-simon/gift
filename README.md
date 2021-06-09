@@ -6,7 +6,6 @@
 이는 클라우드 네이티브 애플리케이션의 개발에 요구되는 체크포인트들을 통과하기 위한 예시 답안을 포함합니다.
 - 체크포인트 : https://workflowy.com/s/assessment-check-po/T5YrzcMewfo4J6LW
 
-![image](https://user-images.githubusercontent.com/80744224/121329802-7c9a8480-c950-11eb-8e1c-d728dcc14a37.png)
 
 
 # Table of contents
@@ -473,13 +472,8 @@ kubectl delete -f deployment.yml
 
 # 수강 신청 후, 포인트(point) -> 기프트(gift) 갈 때 Fail
 
-![image](https://user-images.githubusercontent.com/80744224/121329591-4f4dd680-c950-11eb-869d-5a564be35b1a.png)
+![image](https://user-images.githubusercontent.com/80744224/121329918-95a33580-c950-11eb-8f35-a5bae06645f8.png)
 
-
-![image](https://user-images.githubusercontent.com/80744224/121329568-4957f580-c950-11eb-945b-b29297a5e0d5.png)
-
-
-![image](https://user-images.githubusercontent.com/80744224/121323898-2d9e2080-c94b-11eb-846f-c8314b5ab197.png)
 
 
 # 결제서비스 재기동
