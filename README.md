@@ -721,6 +721,9 @@ kubectl expose deploy point --type=ClusterIP --port=8080
 
 ![image](https://user-images.githubusercontent.com/80744224/121289345-bd2dda00-c91f-11eb-9945-a2237fd7e68c.png)
 
+![image](https://user-images.githubusercontent.com/80744224/121310765-aba7fa80-c93e-11eb-94a9-4b981c96d107.png)
+
+
 
 
 
