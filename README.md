@@ -676,6 +676,9 @@ kubectl expose deploy point --type=ClusterIP --port=8080
 
 ![image](https://user-images.githubusercontent.com/80744224/121288049-b2724580-c91d-11eb-9e2c-2cd2693e0600.png)
 
+![image](https://user-images.githubusercontent.com/80744224/121288757-cff3df00-c91e-11eb-8872-b91c6a3cd2e4.png)
+
+
 
 
 ## 동기식 호출 / 서킷 브레이킹 / 장애격리
