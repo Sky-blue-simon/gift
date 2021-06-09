@@ -127,26 +127,6 @@
 ![부적격 이벤트](https://user-images.githubusercontent.com/80744224/121277157-f871de00-c90a-11eb-8b32-47ec1588cfa8.png)
 
 
-### 액터, 커맨드 부착하여 읽기 좋게
-![액터커맨드](https://user-images.githubusercontent.com/80744183/119314373-a6488000-bcaf-11eb-9097-4204f5cef330.png)
-
-### 어그리게잇으로 묶기
-![어그리게잇](https://user-images.githubusercontent.com/80744183/119314463-beb89a80-bcaf-11eb-868c-e307669ccc30.png)
-
-    - class의 수강신청, course의 강의등록, 결제의 결제이력은 그와 연결된 command 와 event 들에 의하여 트랜잭션이 유지되어야 하는 단위로 그들 끼리 묶어줌
-
-### 바운디드 컨텍스트로 묶기
-
-![바운디드](https://user-images.githubusercontent.com/80744183/119314555-d8f27880-bcaf-11eb-82cd-092f27876c0d.png)
-
-    - 도메인 서열 분리 
-        - Core Domain:  class, course : 없어서는 안될 핵심 서비스이며, 연견 Up-time SLA 수준을 99.999% 목표, 배포주기는 class 의 경우 1주일 1회 미만, course 의 경우 1개월 1회 미만
-        - General Domain:   pay : 결제서비스로 3rd Party 외부 서비스를 사용하는 것이 경쟁력이 높음 (핑크색으로 이후 전환할 예정)
-
-### 폴리시 부착 (괄호는 수행주체, 폴리시 부착을 둘째단계에서 해놔도 상관 없음. 전체 연계가 초기에 드러남)
-
-![폴리시 부착](https://user-images.githubusercontent.com/80744183/119314651-f293c000-bcaf-11eb-975d-36e1bcf1fd40.png)
-
 ### 폴리시의 이동과 컨텍스트 매핑 (점선은 Pub/Sub, 실선은 Req/Resp)
 
 ![1차본](https://user-images.githubusercontent.com/80744183/119314934-40102d00-bcb0-11eb-8ffa-e3807f05c5d7.png)
