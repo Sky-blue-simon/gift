@@ -124,10 +124,8 @@
 
 
 ### 부적격 이벤트 탈락
-![부적격 이벤트](https://user-images.githubusercontent.com/80744183/119314284-8d3fcf00-bcaf-11eb-9eb8-3a6d47c4a246.png)
+![부적격 이벤트](https://user-images.githubusercontent.com/80744224/121277157-f871de00-c90a-11eb-8b32-47ec1588cfa8.png)
 
-    - 과정중 도출된 잘못된 도메인 이벤트들을 걸러내는 작업을 수행함
-        - 통보, 알림의 경우 학생, 강사의 행위와 상관없이 자동적으로 수행되어야 함, 이벤트에서 제외
 
 ### 액터, 커맨드 부착하여 읽기 좋게
 ![액터커맨드](https://user-images.githubusercontent.com/80744183/119314373-a6488000-bcaf-11eb-9097-4204f5cef330.png)
