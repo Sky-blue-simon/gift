@@ -465,7 +465,9 @@ public class PaymentServiceFallback implements PaymentService {
 - 동기식 호출에서는 호출 시간에 따른 타임 커플링이 발생하며, 결제 시스템이 장애가 나면 주문도 못받는다는 것을 확인:
 
 
-```
+![image](https://user-images.githubusercontent.com/80744224/121330232-c84d2e00-c950-11eb-9648-adaf42727eb3.png)
+
+
 # 기프트 (gift) 서비스를 잠시 내려놓음
 cd ./gift/kubernetes
 kubectl delete -f deployment.yml
