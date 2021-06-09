@@ -363,6 +363,12 @@ http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.am
 
 ![수강 신청 확인](https://user-images.githubusercontent.com/80744224/121299528-8613f480-c930-11eb-96d2-57fe15b6650b.png)
 
+![포인트 등록 확인](https://user-images.githubusercontent.com/80744224/121309393-16f0cd00-c93d-11eb-9468-9a0b5d1b6b6d.png)
+
+![기프트 등록 확인](https://user-images.githubusercontent.com/80744224/121309494-3687f580-c93d-11eb-8dff-2bc4ec14ce51.png)
+
+
+
 
 
 ## 폴리글랏 퍼시스턴스
