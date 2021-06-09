@@ -430,50 +430,10 @@ NAME                                     STATUS   VOLUME                        
 persistentvolumeclaim/mysql-1621826572   Bound    pvc-d746469a-9f39-4177-9f5a-1aee384d6064   8Gi        RWO            gp2            8h
 ```
 
-## 폴리글랏 프로그래밍
-
-SMS 서비스(alert)는 시나리오 상 모든 상태 변경이 발생 시 고객에게 SMS 메시지 보내는 기능의 구현 파트는 해당 팀이 python 을 이용하여 구현하기로 하였다. 
-해당 파이썬 구현체는 각 이벤트를 수신하여 처리하는 Kafka consumer 로 구현되었고 코드는 다음과 같다
-
-```
-from kafka import KafkaConsumer
-from logging.config import dictConfig
-import logging
-import os
-
-kafka_url = os.getenv('KAFKA_URL')
-log_file = os.getenv('LOG_FILE')
-
-...
-
-logging.debug("KAFKA URL : %s" % (kafka_url))
-logging.debug("LOG_FILE : %s" % (log_file))
-
-consumer = KafkaConsumer('lecture', bootstrap_servers=[
-                         kafka_url], auto_offset_reset='earliest', enable_auto_commit=True, group_id='alert')
-
-for message in consumer:
-    logging.debug("Topic: %s, Partition: %d, Offset: %d, Key: %s, Value: %s" % (
-        message.topic, message.partition, message.offset, message.key, message.value))
-
-# SMS 발송 API
-
-```
-
-파이선 애플리케이션을 컴파일하고 실행하기 위한 도커파일은 아래와 같다 
-
-```
-FROM python:3.6.13-slim
-RUN pip install kafka-python
-WORKDIR /app
-COPY alert_consumer.py alert_consumer.py
-ENTRYPOINT ["python","-u","alert_consumer.py"]
-```
-
 
 ## 동기식 호출 과 Fallback 처리
 
-분석단계에서의 조건 중 하나로 수강신청(class)->결제(pay) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리하기로 하였다. 호출 프로토콜은 이미 앞서 Rest Repository 에 의해 노출되어있는 REST 서비스를 FeignClient 를 이용하여 호출하도록 한다. 
+수강신청(class) 한 후, 포인트(point) -> 기프트(gift) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리함.
 
 - 결제서비스를 호출하기 위하여 Stub과 (FeignClient) 를 이용하여 Service 대행 인터페이스 (Proxy) 를 구현 
 
@@ -528,23 +488,29 @@ public class PaymentServiceFallback implements PaymentService {
 
 
 ```
-# 결제 (pay) 서비스를 잠시 내려놓음
-cd ./pay/kubernetes
+# 기프트 (gift) 서비스를 잠시 내려놓음
+cd ./gift/kubernetes
 kubectl delete -f deployment.yml
 
-# 수강 신청
-http POST http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/classes courseId=1 fee=10000 student=KimSoonHee textBook=eng_book #Fail
-http POST http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/classes courseId=1 fee=12000 student=JohnDoe textBook=kor_book #Fail
-
+# 수강 신청 후, 포인트(point) -> 기프트(gift) 갈 때 Fail
 ![image](https://user-images.githubusercontent.com/80744224/121321228-e020b400-c948-11eb-849a-e33031e2d99f.png)
+![image](https://user-images.githubusercontent.com/80744224/121323767-13644280-c94b-11eb-8702-0b466236532a.png)
+
+![image](https://user-images.githubusercontent.com/80744224/121323898-2d9e2080-c94b-11eb-846f-c8314b5ab197.png)
 
 
 # 결제서비스 재기동
-kubectl apply -f deployment.yml
+![image](https://user-images.githubusercontent.com/80744224/121323931-32fb6b00-c94b-11eb-8b6c-f92f86713566.png)
 
-# 수강 신청
-http POST http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/classes courseId=1 fee=10000 student=KimSoonHee textBook=eng_book #Success
-http POST http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/classes courseId=1 fee=12000 student=JohnDoe textBook=kor_book #Success
+
+# 수강 신청 후, 포인트와 기프트 정상 조회
+http GET http://a6e770600b6db4906b16f6cffd71f5b6-1894361895.ap-southeast-2.elb.amazonaws.com:8080/points
+http GET http://a6e770600b6db4906b16f6cffd71f5b6-1894361895.ap-southeast-2.elb.amazonaws.com:8080/gifts
+
+![image](https://user-images.githubusercontent.com/80744224/121324229-7a81f700-c94b-11eb-94d4-9ededce6606a.png)
+
+![image](https://user-images.githubusercontent.com/80744224/121323960-3abb0f80-c94b-11eb-8ee7-a5cc13bac923.png)
+
 ```
 
 - 또한 과도한 요청시에 서비스 장애가 도미노 처럼 벌어질 수 있다. 
