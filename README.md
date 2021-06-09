@@ -470,8 +470,12 @@ cd ./gift/kubernetes
 kubectl delete -f deployment.yml
 
 # 수강 신청 후, 포인트(point) -> 기프트(gift) 갈 때 Fail
-![image](https://user-images.githubusercontent.com/80744224/121321228-e020b400-c948-11eb-849a-e33031e2d99f.png)
-![image](https://user-images.githubusercontent.com/80744224/121323767-13644280-c94b-11eb-8702-0b466236532a.png)
+
+![image](https://user-images.githubusercontent.com/80744224/121329591-4f4dd680-c950-11eb-869d-5a564be35b1a.png)
+
+
+![image](https://user-images.githubusercontent.com/80744224/121329568-4957f580-c950-11eb-945b-b29297a5e0d5.png)
+
 
 ![image](https://user-images.githubusercontent.com/80744224/121323898-2d9e2080-c94b-11eb-846f-c8314b5ab197.png)
 
