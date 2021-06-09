@@ -477,24 +477,9 @@ ENTRYPOINT ["python","-u","alert_consumer.py"]
 
 - 결제서비스를 호출하기 위하여 Stub과 (FeignClient) 를 이용하여 Service 대행 인터페이스 (Proxy) 를 구현 
 
-```
-# (class) PaymentService.java
 
-package lecture.external;
+![image](https://user-images.githubusercontent.com/80744224/121320144-d8144480-c947-11eb-8f3a-685641c1b5cb.png)
 
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-@FeignClient(name="pay", url="${api.payment.url}", fallback = PaymentServiceFallback.class)
-public interface PaymentService {
-
-    @RequestMapping(method= RequestMethod.POST, path="/succeedPayment")
-    public boolean pay(@RequestBody Payment payment);
-
-}
-```
 
 - FallBack 처리
 ```
