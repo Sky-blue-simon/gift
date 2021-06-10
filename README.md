@@ -541,7 +541,7 @@ spec:
 ```
 
 - seige 로 부하 생성
-- 
+ 
 ```
 siege -c150 -t30S -r10 -v --content-type "application/json" 'http://a2c1c1b2c20e1474b87e68c5ae666a92-978533572.ap-southeast-2.elb.amazonaws.com:8080/gifts POST {"courseId": 1, "fee": 10000, "student": "gil-dong",}'
 ```
