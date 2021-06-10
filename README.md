@@ -461,7 +461,7 @@ hystrix:
 
 
 
-## 오토스케일 아웃
+## 오토스케일, Readiness Probe, livenessProbe
 
 * replica 를 동적으로 늘려주도록 HPA 를 설정한다
 
@@ -480,9 +480,9 @@ watch kubectl get pod,hpa
 ![image](https://user-images.githubusercontent.com/80744224/121455331-36d8cd00-c9df-11eb-8bd8-04b010e76735.png)
 
 
-## 오토스케일, Readiness Probe
 
-* 먼저 무정지 재배포가 100% 되는 것인지 확인하기 위해서 Readiness Probe 와 livenessProbe 설정 제거
+
+- 먼저 무정지 재배포가 100% 되는 것인지 확인하기 위해서 Readiness Probe 와 livenessProbe 설정 제거
 
 - 오코스케일 설정 제거 버전으로 배포
 
