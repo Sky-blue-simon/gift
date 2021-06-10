@@ -437,7 +437,7 @@ kubectl expose deploy point --type=ClusterIP --port=8080
 
 
 
-## 동기식 호출 / 서킷 브레이킹 / 장애격리
+## 서킷 브레이킹 / 장애격리
 
 * 서킷 브레이킹 프레임워크의 선택: Spring FeignClient + Hystrix 옵션을 사용하여 구현함
 
