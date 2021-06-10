@@ -320,12 +320,15 @@ http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.am
 
 
 - 수강 취소
+
 ![image](https://user-images.githubusercontent.com/80744224/121349495-8a5a0500-c964-11eb-95cf-54dd66d2a79a.png)
 
 - 수강 취소 확인
+
 ![image](https://user-images.githubusercontent.com/80744224/121349554-9e9e0200-c964-11eb-8c4d-ca5160ac8606.png)
 
 - Point 0 로 변경 확인
+
 ![image](https://user-images.githubusercontent.com/80744224/121349701-c9885600-c964-11eb-96bb-44d33dd20c2f.png)
 
 
