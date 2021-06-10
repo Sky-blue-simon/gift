@@ -130,46 +130,41 @@ replicaset.apps/point-5fb456d68f     1         1         1       18m
 
 ## DDD 의 적용
 
-- 각 서비스내에 도출된 핵심 Aggregate Root 객체를 Entity 로 선언하였다: 
- (예시는 course 마이크로 서비스). 이때 가능한 중학교 수준의 영어를 사용하려고 노력했다. 
+- 각 서비스내에 도출된 핵심 Aggregate Root 객체를 Entity 로 선언함. 
+ (예시는 gift 마이크로 서비스). 가능한 중학교 수준의 영어 사용함. 
 
 ```
 package lecture;
 
 import javax.persistence.*;
 import org.springframework.beans.BeanUtils;
+import java.util.List;
+import java.util.Date;
 
 @Entity
-@Table(name = "Course_table")
-public class Course {
+@Table(name="Gift_table")
+public class Gift {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
-    private String name;
-    private String teacher;
+    private Long classId;
     private Long fee;
-    private String textBook;
+    private String student;
+    private Integer giftstock;
 
     @PostPersist
-    public void onPostPersist() {
-        CourseRegistered courseRegistered = new CourseRegistered();
-        BeanUtils.copyProperties(this, courseRegistered);
-        courseRegistered.publishAfterCommit();
-    }
-
-    @PostUpdate
-    public void onPostUpdate() {
-        CourseModified courseModified = new CourseModified();
-        BeanUtils.copyProperties(this, courseModified);
-        courseModified.publishAfterCommit();
+    public void onPostPersist(){
+        GiftRegistered giftRegistered = new GiftRegistered();
+        BeanUtils.copyProperties(this, giftRegistered);
+        giftRegistered.publishAfterCommit();
     }
 
     @PreRemove
-    public void onPreRemove() {
-        CourseDeleted courseDeleted = new CourseDeleted();
-        BeanUtils.copyProperties(this, courseDeleted);
-        courseDeleted.publishAfterCommit();
+    public void onPreRemove(){
+        GiftCanceled giftCanceled = new GiftCanceled();
+        BeanUtils.copyProperties(this, giftCanceled);
+        giftCanceled.publishAfterCommit();
     }
 
     public Long getId() {
@@ -179,31 +174,13 @@ public class Course {
     public void setId(Long id) {
         this.id = id;
     }
-
-    public String getName() {
-        return name;
+    public Long getClassId() {
+        return classId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setClassId(Long classId) {
+        this.classId = classId;
     }
-
-    public String getTeacher() {
-        return teacher;
-    }
-
-    public void setTeacher(String teacher) {
-        this.teacher = teacher;
-    }
-
-    public String getTextBook() {
-        return textBook;
-    }
-
-    public void setTextBook(String textBook) {
-        this.textBook = textBook;
-    }
-
     public Long getFee() {
         return fee;
     }
@@ -211,16 +188,36 @@ public class Course {
     public void setFee(Long fee) {
         this.fee = fee;
     }
+    public String getStudent() {
+        return student;
+    }
+
+    public void setStudent(String student) {
+        this.student = student;
+    }
+    public Integer getGiftstock() {
+        return giftstock;
+    }
+
+    public void setGiftstock(Integer giftstock) {
+        this.giftstock = giftstock;
+    }
 
 }
+
 ```
+
 - Entity Pattern 과 Repository Pattern 을 적용하여 JPA 를 통하여 다양한 데이터소스 유형 (RDB or NoSQL) 에 대한 별도의 처리가 없도록 데이터 접근 어댑터를 자동 생성하기 위하여 Spring Data REST 의 RestRepository 를 적용하였다
 ```
 package lecture;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-public interface CourseRepository extends PagingAndSortingRepository<Course, Long> {
+@RepositoryRestResource(collectionResourceRel="gifts", path="gifts")
+public interface GiftRepository extends PagingAndSortingRepository<Gift, Long>{
+
+    Gift findByClassId(Long classId);
 
 }
 ```
