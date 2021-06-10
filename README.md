@@ -325,7 +325,8 @@ http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.am
 
 
 - 크롬에서 포인트 등록 확인
-![image](https://user-images.githubusercontent.com/80744224/121348828-cb054e80-c963-11eb-920e-f7e8e1ab82ae.png)
+
+![image](https://user-images.githubusercontent.com/80744224/121448679-1c005b80-c9d3-11eb-8577-6023d6dee8cd.png)
 
 
 - 기프트 등록 확인
@@ -335,7 +336,9 @@ http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.am
 
 
 - 크롬에서 기프트 등록 확인
-![image](https://user-images.githubusercontent.com/80744224/121348907-e2dcd280-c963-11eb-8792-7093344b86cc.png)
+
+![image](https://user-images.githubusercontent.com/80744224/121448697-26baf080-c9d3-11eb-9613-09fff88157ea.png)
+
 
 
 - My Page
