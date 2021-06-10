@@ -463,7 +463,7 @@ hystrix:
 
 ## 오토스케일, Readiness Probe, livenessProbe
 
-* replica 를 동적으로 늘려주도록 HPA 를 설정한다
+* 오토스케일이 가능하도록 HPA 를 설정한다
 
 kubectl autoscale deploy gift --min=1 --max=10 --cpu-percent=15
 
@@ -482,7 +482,7 @@ watch kubectl get pod,hpa
 
 
 
-- 먼저 무정지 재배포가 100% 되는 것인지 확인하기 위해서 Readiness Probe 와 livenessProbe 설정 제거
+- Readiness Probe 와 livenessProbe 설정 제거
 
 - 오코스케일 설정 제거 버전으로 배포
 
@@ -528,12 +528,13 @@ siege -c150 -t30S -r10 -v --content-type "application/json" 'http://a2c1c1b2c20e
 ![image](https://user-images.githubusercontent.com/80744224/121455490-81f2e000-c9df-11eb-93b4-afff6823916d.png)
 
 
-- 오토스케일 설정으로 gift Pod 다수 생성
+- 오토스케일로 gift Pod 다수 생성
 
 ![image](https://user-images.githubusercontent.com/80744224/121455836-1a896000-c9e0-11eb-9424-54f0960583d6.png)
 
 
-Availability 가 평소 100% 미만으로 떨어지는 것을 확인. 이를 막기위해 Readiness Probe 와 livenessProbe 를 설정함:
+- Availability 가 평소 100% 미만으로 떨어지는 것을 확인함
+- 이를 막기위해 Readiness Probe 와 livenessProbe 를 설정함:
 
 
 - deployment.yml 의 readiness probe 의 설정:
@@ -585,6 +586,7 @@ spec:
 ![image](https://user-images.githubusercontent.com/80744224/121456248-bd41de80-c9e0-11eb-8243-4ce4ff339f53.png)
 
 - gift Pod 1개 유지
+
 ![image](https://user-images.githubusercontent.com/80744224/121456229-b6b36700-c9e0-11eb-8861-29d1e258e8c8.png)
 
 
