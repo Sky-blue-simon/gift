@@ -561,6 +561,7 @@ siege -c150 -t30S -r10 -v --content-type "application/json" 'http://a2c1c1b2c20e
 
 (gift) deployment.yml 파일
  
+```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -598,6 +599,8 @@ spec:
             timeoutSeconds: 2
             periodSeconds: 5
             failureThreshold: 5
+
+```
 
 - kubectl apply -f deployment.yml
 
