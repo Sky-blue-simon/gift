@@ -624,7 +624,7 @@ kind: ConfigMap
 metadata:
   name: kafka-config
 data:
-  KAFKA_URL: kafka-1621824578.kafka.svc.cluster.local:9092
+  KAFKA_URL: my-kafka.kafka.svc.cluster.local:9092
   LOG_FILE: /tmp/debug.log
 ```
 
@@ -637,34 +637,32 @@ deployment yaml 파일
           ports:
             - containerPort: 8080
           env:
-          - name: KAFKA_URL
-            valueFrom:
-              configMapKeyRef:
-                name: kafka-config
-                key: KAFKA_URL
-          - name: LOG_FILE
-            valueFrom:
-              configMapKeyRef:
-                name: kafka-config
-                key: LOG_FILE
+            - name: KAFKA_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-config
+                  key: KAFKA_URL
+            - name: LOG_FILE
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-config
+                  key: LOG_FILE
 ```
 
 ```
-프로그램(python) 파일
+프로그램에 환경 변수 적용 
 
-from kafka import KafkaConsumer
-from logging.config import dictConfig
-import logging
-import os
+    @PostPersist
+    public void onPostPersist(){
 
-kafka_url = os.getenv('KAFKA_URL')
-log_file = os.getenv('LOG_FILE')
+        System.out.println("########## Configmap KAFKA_URL => " + System.getenv("KAFKA_URL"));
+        this.setStatus(System.getenv("KAFKA_URL"));
 
-consumer = KafkaConsumer('lecture', bootstrap_servers=[
-                         kafka_url], auto_offset_reset='earliest', enable_auto_commit=True, group_id='alert')
-
+        System.out.println("########## Configmap LOG_FILE => " + System.getenv("LOG_FILE"));
+        this.setStatus(System.getenv("LOG_FILE"));
 
 ```
+
 ## 모니터링
 * istio 설치, Kiali 구성, Jaeger 구성, Prometheus 및 Grafana 구성
 
