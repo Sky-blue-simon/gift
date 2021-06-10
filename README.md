@@ -396,31 +396,6 @@ http GET http://a6e770600b6db4906b16f6cffd71f5b6-1894361895.ap-southeast-2.elb.a
 ![image](https://user-images.githubusercontent.com/80744224/121323960-3abb0f80-c94b-11eb-8ee7-a5cc13bac923.png)
 
 
-
-## 비동기식 호출 / 시간적 디커플링 / 장애격리 / 최종 (Eventual) 일관성 테스트
-
-배송 시스템은 수강신청/결제와 완전히 분리되어있으며, 이벤트 수신에 따라 처리되기 때문에, 배송시스템이 유지보수로 인해 잠시 내려간 상태라도 수강신청을 받는데 문제가 없다:
-
-- 배송 서비스 (course) 를 잠시 내려놓음 
-cd ./course/kubernetes
-kubectl delete -f deployment.yml
-
-- 수강 신청
-http POST http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/classes courseId=1 fee=10000 student=KimSoonHee textBook=eng_book #Success
-http POST http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/classes courseId=1 fee=12000 student=JohnDoe textBook=kor_book #Success
-
-- 수강 신청 상태 확인
-http GET http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/classes   # 수강 신청 완료 
-http GET http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/inquiryMypages  # 배송 상태 "deliveryStatus": null
-
-- 배송 서비스 (course) 기동
-kubectl apply -f deployment.yml
-
-- 배송 상태 확인
-http GET http://aa8ed367406254fc0b4d73ae65aa61cd-24965970.ap-northeast-2.elb.amazonaws.com:8080/inquiryMypages  # 배송 상태 "deliveryStatus": "DELIVERY_START"
-
-
-
 # 운영
 
 ## CI/CD 설정
@@ -489,79 +464,49 @@ hystrix:
 
 kubectl autoscale deploy gift --min=1 --max=10 --cpu-percent=15
 
-kubectl autoscale deploy course --min=1 --max=10 --cpu-percent=5
-
-kubectl autoscale deploy class --min=1 --max=10 --cpu-percent=1
 
 * 부하테스터 siege 툴 사용
 
-siege -c150 -t30S -v --content-type "application/json" 'http://a2407157de33e4281bce4111697ad1ff-1059344160.ap-southeast-2.elb.amazonaws.com:8080/gifts POST {"classId":"100", "fee":"20000", "student":"young"}'
+siege -c150 -t30S -r10 -v --content-type "application/json" 'http://a2c1c1b2c20e1474b87e68c5ae666a92-978533572.ap-southeast-2.elb.amazonaws.com:8080/gifts POST {"courseId": 1, "fee": 10000, "student": "gil-dong",}'
 
-siege -c255 -t300S -v --content-type "application/json" 'http://a2407157de33e4281bce4111697ad1ff-1059344160.ap-southeast-2.elb.amazonaws.com:8080/courses POST {"name":"english", "teacher":"hong", "fee":"10000", "textBook":"eng_book"}'
 
-siege -c255 -t300S -v --content-type "application/json" 'http://a2407157de33e4281bce4111697ad1ff-1059344160.ap-southeast-2.elb.amazonaws.com:8080/classes POST {"courseId":"3", "fee":"10000", "student":"gil-dong", "textBook":"eng_book"}'
-
-- 오토스케일이 어떻게 되고 있는지 모니터링을 걸어둔다:
+- 오토스케일 모니터링
 
 watch kubectl get pod,hpa
 
-![image](https://user-images.githubusercontent.com/80744224/121344497-cab68480-c95e-11eb-8637-c68dc8de5c7f.png)
+![image](https://user-images.githubusercontent.com/80744224/121455331-36d8cd00-c9df-11eb-8bd8-04b010e76735.png)
 
 
+## 오토스케일, Readiness Probe
 
+* 먼저 무정지 재배포가 100% 되는 것인지 확인하기 위해서 Readiness Probe 와 livenessProbe 설정 제거
 
+- 오코스케일 설정 제거 버전으로 배포
 
-## 무정지 재배포
+kubectl apply -f deployment_no.yml
 
-* 먼저 무정지 재배포가 100% 되는 것인지 확인하기 위해서 Autoscaler 이나 CB 설정을 제거함
+![image](https://user-images.githubusercontent.com/80744224/121455749-f7f74700-c9df-11eb-9056-67ad839c45c3.png)
 
-- seige 로 배포작업 직전에 워크로드를 모니터링 함.
-```
-siege -c100 -t120S -r10 -v --content-type "application/json" 'http://gateway:8080/courses POST {"name": "english", "teacher": "hong", "fee": 10000, "textBook": "eng_book"}'
-
-
-** SIEGE 4.0.5
-** Preparing 100 concurrent users for battle.
-The server is now under siege...
-
-HTTP/1.1 201     3.43 secs:     251 bytes ==> POST http://gateway:8080/courses
-HTTP/1.1 201     1.28 secs:     251 bytes ==> POST http://gateway:8080/courses
-HTTP/1.1 201     0.20 secs:     251 bytes ==> POST http://gateway:8080/courses
-HTTP/1.1 201     3.44 secs:     251 bytes ==> POST http://gateway:8080/courses
-HTTP/1.1 201     1.18 secs:     251 bytes ==> POST http://gateway:8080/courses
-HTTP/1.1 201     0.28 secs:     251 bytes ==> POST http://gateway:8080/courses
-HTTP/1.1 201     1.41 secs:     251 bytes ==> POST http://gateway:8080/courses
-HTTP/1.1 201     1.22 secs:     251 bytes ==> POST http://gateway:8080/courses
-HTTP/1.1 201     0.21 secs:     251 bytes ==> POST http://gateway:8080/courses
-HTTP/1.1 201     0.13 secs:     251 bytes ==> POST http://gateway:8080/courses
-HTTP/1.1 201     1.41 secs:     251 bytes ==> POST http://gateway:8080/courses
-HTTP/1.1 201     1.31 secs:     251 bytes ==> POST http://gateway:8080/courses
-
-```
-
-- 새버전으로의 배포 시작
-
-kubectl apply -f kubectl apply -f deployment_no.yml
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: point
+  name: gift
   labels:
-    app: point
+    app: gift
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: point
+      app: gift
   template:
     metadata:
       labels:
-        app: point
+        app: gift
     spec:
       containers:
-        - name: point
-          image: 879772956301.dkr.ecr.ap-southeast-2.amazonaws.com/user09-point:latest
+        - name: gift
+          image: 879772956301.dkr.ecr.ap-southeast-2.amazonaws.com/user09-gift:latest
           ports:
             - containerPort: 8080
           resources:
@@ -571,38 +516,46 @@ spec:
               cpu: 1000m
 
 
+- seige 로 부하 생성
+siege -c150 -t30S -r10 -v --content-type "application/json" 'http://a2c1c1b2c20e1474b87e68c5ae666a92-978533572.ap-southeast-2.elb.amazonaws.com:8080/gifts POST {"courseId": 1, "fee": 10000, "student": "gil-dong",}'
 
-- seige 의 화면으로 넘어가서 Availability 가 100% 미만으로 떨어졌는지 확인
-```
-Transactions:                    614 hits
-Availability:                  35.35 %
-Elapsed time:                  34.95 secs
-Data transferred:               0.38 MB
-Response time:                  3.87 secs
-Transaction rate:              17.57 trans/sec
-Throughput:                     0.01 MB/sec
-Concurrency:                   68.06
-Successful transactions:         614
-Failed transactions:            1123
-Longest transaction:           29.72
-Shortest transaction:           0.00
 
-```
-배포 중 Availability 가 평소 100%에서 35% 대로 떨어지는 것을 확인. 원인은 쿠버네티스가 성급하게 새로 올려진 서비스를 READY 상태로 인식하여 서비스 유입을 진행한 것이기 때문. 이를 막기위해 Readiness Probe 를 설정함:
+- Availability 가 100% 미만 확인
 
-```
-# deployment.yaml 의 readiness probe 의 설정:
+![image](https://user-images.githubusercontent.com/80744224/121455490-81f2e000-c9df-11eb-93b4-afff6823916d.png)
 
-# (point) deployment.yaml 파일
+
+- 오토스케일 설정으로 gift Pod 다수 생성
+
+![image](https://user-images.githubusercontent.com/80744224/121455836-1a896000-c9e0-11eb-9424-54f0960583d6.png)
+
+
+Availability 가 평소 100% 미만으로 떨어지는 것을 확인. 이를 막기위해 Readiness Probe 와 livenessProbe 를 설정함:
+
+
+- deployment.yml 의 readiness probe 의 설정:
+
+(gift) deployment.yml 파일
  
- template:
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gift
+  labels:
+    app: gift
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gift
+  template:
     metadata:
       labels:
-        app: point
+        app: gift
     spec:
       containers:
-        - name: point
-          image: 879772956301.dkr.ecr.ap-southeast-2.amazonaws.com/user09-point:latest
+        - name: gift
+          image: 879772956301.dkr.ecr.ap-southeast-2.amazonaws.com/user09-gift:latest
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -622,28 +575,16 @@ Shortest transaction:           0.00
             periodSeconds: 5
             failureThreshold: 5
 
-/> kubectl apply -f deployment.yml
-```
+- kubectl apply -f deployment.yml
 
 - 동일한 시나리오로 재배포 한 후 Availability 확인:
-```
-Lifting the server siege...
-Transactions:                  39737 hits
-Availability:                 100.00 %
-Elapsed time:                 119.91 secs
-Data transferred:               9.66 MB
-Response time:                  0.30 secs
-Transaction rate:             331.39 trans/sec
-Throughput:                     0.08 MB/sec
-Concurrency:                   99.71
-Successful transactions:       39737
-Failed transactions:               0
-Longest transaction:            1.89
-Shortest transaction:           0.00
 
-```
+![image](https://user-images.githubusercontent.com/80744224/121456248-bd41de80-c9e0-11eb-8243-4ce4ff339f53.png)
 
-배포기간 동안 Availability 가 변화없기 때문에 무정지 재배포가 성공한 것으로 확인됨.
+- gift Pod 1개 유지
+![image](https://user-images.githubusercontent.com/80744224/121456229-b6b36700-c9e0-11eb-8861-29d1e258e8c8.png)
+
+
 
 ## 개발 운영 환경 분리
 * ConfigMap을 사용하여 운영과 개발 환경 분리
