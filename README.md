@@ -309,24 +309,29 @@ http GET http://a02b3b4c7ed60432eb2724c33b6a12ce-294743840.ap-southeast-2.elb.am
 
 - 강좌 등록 확인
 
-![강좌 등록](https://user-images.githubusercontent.com/80744224/121348410-4b777f80-c963-11eb-88e1-f270a2b50a6c.png)
+![image](https://user-images.githubusercontent.com/80744224/121448345-6df4b180-c9d2-11eb-86ae-184bfd1fd344.png)
+
 
 
 - 수강 신청
 
-![수강 신청](https://user-images.githubusercontent.com/80744224/121348509-6813b780-c963-11eb-875d-a5ff65c04ba2.png)
+![image](https://user-images.githubusercontent.com/80744224/121448377-7baa3700-c9d2-11eb-993c-723856f1409c.png)
+
 
 
 - 포인트 등록 확인
 
-![포인트 등록](https://user-images.githubusercontent.com/80744224/121348585-7d88e180-c963-11eb-96bf-86d4d1f8f116.png)
+![image](https://user-images.githubusercontent.com/80744224/121448396-84027200-c9d2-11eb-8951-4360b96bf292.png)
+
 
 - 크롬에서 포인트 등록 확인
 ![image](https://user-images.githubusercontent.com/80744224/121348828-cb054e80-c963-11eb-920e-f7e8e1ab82ae.png)
 
 
 - 기프트 등록 확인
-![기프트 등록](https://user-images.githubusercontent.com/80744224/121348678-998c8300-c963-11eb-9f44-0a61e12171a1.png)
+
+![image](https://user-images.githubusercontent.com/80744224/121448415-8ebd0700-c9d2-11eb-9e06-ff97cf9e257d.png)
+
 
 
 - 크롬에서 기프트 등록 확인
