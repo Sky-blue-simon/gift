@@ -566,11 +566,38 @@ HTTP/1.1 201     1.31 secs:     251 bytes ==> POST http://gateway:8080/courses
 
 ```
 
-- 새버전(v0.1)으로의 배포 시작
-```
-kubectl apply -f kubectl apply -f deployment_v0.1.yml
+- 새버전으로의 배포 시작
 
-```
+kubectl apply -f kubectl apply -f deployment_no.yml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: point
+  labels:
+    app: point
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: point
+  template:
+    metadata:
+      labels:
+        app: point
+    spec:
+      containers:
+        - name: point
+          image: 879772956301.dkr.ecr.ap-southeast-2.amazonaws.com/user09-point:latest
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: 1000m
+            requests:
+              cpu: 1000m
+
+
 
 - seige 의 화면으로 넘어가서 Availability 가 100% 미만으로 떨어졌는지 확인
 ```
@@ -586,27 +613,38 @@ Successful transactions:         614
 Failed transactions:            1123
 Longest transaction:           29.72
 Shortest transaction:           0.00
+
 ```
 배포 중 Availability 가 평소 100%에서 35% 대로 떨어지는 것을 확인. 원인은 쿠버네티스가 성급하게 새로 올려진 서비스를 READY 상태로 인식하여 서비스 유입을 진행한 것이기 때문. 이를 막기위해 Readiness Probe 를 설정함:
 
 ```
 # deployment.yaml 의 readiness probe 의 설정:
 
-# (course) deployment.yaml 파일
+# (point) deployment.yaml 파일
  
+ template:
+    metadata:
+      labels:
+        app: point
+    spec:
+      containers:
+        - name: point
+          image: 879772956301.dkr.ecr.ap-southeast-2.amazonaws.com/user09-point:latest
+          ports:
+            - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: '/courses'
+              path: '/actuator/health'
               port: 8080
-            initialDelaySeconds: 20
+            initialDelaySeconds: 10
             timeoutSeconds: 2
             periodSeconds: 5
             failureThreshold: 10
           livenessProbe:
             httpGet:
-              path: '/courses'
+              path: '/actuator/health'
               port: 8080
-            initialDelaySeconds: 180
+            initialDelaySeconds: 120
             timeoutSeconds: 2
             periodSeconds: 5
             failureThreshold: 5
