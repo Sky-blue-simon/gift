@@ -614,14 +614,7 @@ spec:
 
 
 
-## 개발 운영 환경 분리
-* ConfigMap을 사용하여 운영과 개발 환경 분리
-
-- kafka환경
-```
-  운영 : kafka-1621824578.kafka.svc.cluster.local:9092
-  개발 : localhost:9092
-```
+## ConfigMap
 
 ```
 configmap yaml 파일
@@ -638,8 +631,11 @@ data:
 ```
 deployment yaml 파일
 
-       - name: consumer
-          image: 052937454741.dkr.ecr.ap-northeast-2.amazonaws.com/lecture-consumer:latest 
+      containers:
+        - name: gift
+          image: 879772956301.dkr.ecr.ap-southeast-2.amazonaws.com/user09-gift:latest
+          ports:
+            - containerPort: 8080
           env:
           - name: KAFKA_URL
             valueFrom:
