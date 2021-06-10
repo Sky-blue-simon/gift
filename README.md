@@ -664,53 +664,11 @@ deployment yaml 파일
 ```
 
 ## 모니터링
-* istio 설치, Kiali 구성, Jaeger 구성, Prometheus 및 Grafana 구성
+* istio 설치, Kiali 설치
 
-```
-root@labs-1409824742:/home/project/team# kubectl get all -n istio-system
-NAME                                        READY   STATUS    RESTARTS   AGE
-pod/grafana-767c5487d6-tccjz                1/1     Running   0          24m
-pod/istio-egressgateway-74f9769788-5z25x    1/1     Running   0          10h
-pod/istio-ingressgateway-74645cb9df-6t4zk   1/1     Running   0          10h
-pod/istiod-756fdd548-rz5fn                  1/1     Running   0          10h
-pod/jaeger-566c547fb9-d9g8l                 1/1     Running   0          13s
-pod/kiali-89fd7f87b-mjtkl                   1/1     Running   0          10h
-pod/prometheus-788c945c9c-ft9wd             2/2     Running   0          10h
+![image](https://user-images.githubusercontent.com/80744224/121469486-87f4bb00-c9f7-11eb-98ea-24749d27a23b.png)
 
-NAME                           TYPE           CLUSTER-IP       EXTERNAL-IP                                                                    PORT(S)                                                                      AGE
-service/grafana                LoadBalancer   10.100.27.22     a17ce955b36c643dba43634c3958f665-1939868886.ap-northeast-2.elb.amazonaws.com   3000:30186/TCP                                                               24m
-service/istio-egressgateway    ClusterIP      10.100.128.222   <none>                                                                         80/TCP,443/TCP,15443/TCP                                                     10h
-service/istio-ingressgateway   LoadBalancer   10.100.24.155    aac2dd82b25c4416b973f4e43609696a-1789343097.ap-northeast-2.elb.amazonaws.com   15021:31151/TCP,80:30591/TCP,443:31900/TCP,31400:31273/TCP,15443:32249/TCP   10h
-service/istiod                 ClusterIP      10.100.167.39    <none>                                                                         15010/TCP,15012/TCP,443/TCP,15014/TCP,853/TCP                                10h
-service/kiali                  LoadBalancer   10.100.5.19      a4aba4808c91d4027949418f3d13b407-827239036.ap-northeast-2.elb.amazonaws.com    20001:32662/TCP,9090:30625/TCP                                               10h
-service/prometheus             ClusterIP      10.100.32.199    <none>                                                                         9090/TCP                                                                     10h
-service/tracing                LoadBalancer   10.100.15.68     ae3b283c82cb34c0f88f2ca92fc70489-1898513510.ap-northeast-2.elb.amazonaws.com   80:30018/TCP                                                                 13s
-service/zipkin                 ClusterIP      10.100.208.86    <none>                                                                         9411/TCP                                                                     13s
+![image](https://user-images.githubusercontent.com/80744224/121469528-a0fd6c00-c9f7-11eb-9eba-7cc670ffd4c4.png)
 
-NAME                                   READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/grafana                1/1     1            1           24m
-deployment.apps/istio-egressgateway    1/1     1            1           10h
-deployment.apps/istio-ingressgateway   1/1     1            1           10h
-deployment.apps/istiod                 1/1     1            1           10h
-deployment.apps/jaeger                 1/1     1            1           14s
-deployment.apps/kiali                  1/1     1            1           10h
-deployment.apps/prometheus             1/1     1            1           10h
 
-NAME                                              DESIRED   CURRENT   READY   AGE
-replicaset.apps/grafana-767c5487d6                1         1         1       24m
-replicaset.apps/istio-egressgateway-74f9769788    1         1         1       10h
-replicaset.apps/istio-ingressgateway-74645cb9df   1         1         1       10h
-replicaset.apps/istiod-756fdd548                  1         1         1       10h
-replicaset.apps/jaeger-566c547fb9                 1         1         1       13s
-replicaset.apps/kiali-89fd7f87b                   1         1         1       10h
-replicaset.apps/prometheus-788c945c9c             1         1         1       10h
-```
-- Tracing (Kiali) http://a4aba4808c91d4027949418f3d13b407-827239036.ap-northeast-2.elb.amazonaws.com:20001/
-![image](https://user-images.githubusercontent.com/80744192/119357389-79619080-bce2-11eb-88b8-41fceafc8568.png)
-
-- Jaeger http://ae3b283c82cb34c0f88f2ca92fc70489-1898513510.ap-northeast-2.elb.amazonaws.com/
-![image](https://user-images.githubusercontent.com/80744192/119419756-ed795400-bd35-11eb-9530-6af13f3bfa5d.png)
-
-- 모니터링 (Grafana) http://http://a17ce955b36c643dba43634c3958f665-1939868886.ap-northeast-2.elb.amazonaws.com:3000/
-![image](https://user-images.githubusercontent.com/80744192/119419299-f1f13d00-bd34-11eb-88ec-6cfce29ca234.png)
 
